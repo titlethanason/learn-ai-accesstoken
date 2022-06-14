@@ -11,6 +11,11 @@ import (
 	"strconv"
 )
 
+type Resp struct {
+	Error   int    `json:"error"`
+	Message string `json:"message"`
+}
+
 func sendEmail(accessToken string) {
 	from := "thanason.eiam@mail.kmutt.ac.th"
 	password := os.Getenv("EMAIL_PASSWORD")
@@ -92,9 +97,7 @@ func main() {
 
 			// verify request data (client need to send auth which matches the AUTH_TOKEN in environment)
 			if token == "" || auth != authToken {
-				resp := make(map[string]string)
-				resp["error"] = "1"
-				resp["message"] = "Invalid data"
+				resp := &Resp{Error: 1, Message: "Invalid data"}
 				jsonResp, err := json.Marshal(resp)
 				if err != nil {
 					log.Fatalf("Error at json marshal: %s", err)
@@ -108,9 +111,7 @@ func main() {
 			} else {
 				accessToken = token
 				sentEmail = false
-				resp := make(map[string]string)
-				resp["error"] = "0"
-				resp["message"] = accessToken
+				resp := &Resp{Error: 0, Message: accessToken}
 				jsonResp, err := json.Marshal(resp)
 				if err != nil {
 					log.Fatalf("Error at json marshal: %s", err)
@@ -155,9 +156,7 @@ func main() {
 				}
 
 				// wait for new token
-				resp := make(map[string]string)
-				resp["error"] = "1"
-				resp["message"] = "Waiting for new token"
+				resp := &Resp{Error: 1, Message: "Waiting for new token"}
 				jsonResp, err := json.Marshal(resp)
 				if err != nil {
 					log.Fatalf("Error at json marshal: %s", err)
@@ -170,9 +169,7 @@ func main() {
 				}
 			} else {
 				// send new token back
-				resp := make(map[string]string)
-				resp["error"] = "0"
-				resp["message"] = accessToken
+				resp := &Resp{Error: 0, Message: accessToken}
 				jsonResp, err := json.Marshal(resp)
 				if err != nil {
 					log.Fatalf("Error at json marshal: %s", err)
