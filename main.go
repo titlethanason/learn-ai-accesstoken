@@ -127,6 +127,7 @@ func main() {
 	})
 
 	http.HandleFunc("/new", func(w http.ResponseWriter, r *http.Request) {
+
 		switch r.Method {
 
 		// return email sending status
