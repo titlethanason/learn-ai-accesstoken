@@ -185,6 +185,10 @@ func main() {
 		}
 	})
 
-	log.Fatal(http.ListenAndServe(":8888", nil))
+	port := os.Getenv("HOST_PORT")
+	if port == "" {
+		port = "80"
+	}
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 
 }
