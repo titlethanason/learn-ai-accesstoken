@@ -16,6 +16,17 @@ type Resp struct {
 	Message string `json:"message"`
 }
 
+func ReadUserIP(r *http.Request) string {
+	IPAddress := r.Header.Get("X-Real-Ip")
+	if IPAddress == "" {
+		IPAddress = r.Header.Get("X-Forwarded-For")
+	}
+	if IPAddress == "" {
+		IPAddress = r.RemoteAddr
+	}
+	return IPAddress
+}
+
 func sendEmail(accessToken string) {
 	from := "thanason.eiam@mail.kmutt.ac.th"
 	password := os.Getenv("EMAIL_PASSWORD")
@@ -78,8 +89,9 @@ func main() {
 
 		// send current access token back
 		case "GET":
+			fmt.Println(ReadUserIP(r))
 			w.WriteHeader(200)
-			_, err := w.Write([]byte(".... " + accessToken[len(accessToken)-10:]))
+			_, err := w.Write([]byte(accessToken))
 			if err != nil {
 				log.Fatalf("Error: %s", err)
 				return
