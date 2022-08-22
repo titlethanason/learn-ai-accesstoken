@@ -79,7 +79,7 @@ func main() {
 		// send current access token back
 		case "GET":
 			w.WriteHeader(200)
-			_, err := w.Write([]byte(accessToken))
+			_, err := w.Write([]byte(".... " + accessToken[len(accessToken)-10:]))
 			if err != nil {
 				log.Fatalf("Error: %s", err)
 				return
